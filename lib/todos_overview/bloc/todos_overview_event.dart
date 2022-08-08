@@ -53,3 +53,7 @@ class TodosOverviewToggleAllRequested extends TodosOverviewEvent {
 class TodosOverviewClearCompletedRequested extends TodosOverviewEvent {
   const TodosOverviewClearCompletedRequested();
 }
+
+class TodosOverviewDeleteAllRequested extends TodosOverviewEvent {
+  const TodosOverviewDeleteAllRequested();
+}

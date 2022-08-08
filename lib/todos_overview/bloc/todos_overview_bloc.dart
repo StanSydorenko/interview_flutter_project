@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_todos/todos_overview/todos_overview.dart';
+import 'package:local_storage_todos_api/local_storage_todos_api.dart';
 import 'package:todos_api/todos_api.dart';
 import 'package:todos_repository/todos_repository.dart';
 
@@ -15,6 +16,17 @@ class TodosOverviewBloc extends Bloc<TodosOverviewEvent, TodosOverviewState> {
     on<TodosOverviewFilterChanged>(_onFilterChanged);
     on<TodosOverviewToggleAllRequested>(_onToggleAllRequested);
     on<TodosOverviewClearCompletedRequested>(_onClearCompletedRequested);
+    _initRepo();
+    on<TodosOverviewTodoDeleted>(_onTodoDeleted);
+
+
+    on<TodosOverviewDeleteAllRequested>(_onDeleteAllRequested);
+  }
+
+  late TodosRepository _todosRepository;
+
+  void _initRepo() async {
+    _todosRepository = TodosRepository(todosApi: LocalStorageTodosApi(plugin: await SharedPreferences.getInstance()));
   }
 
   Future<void> _onSubscriptionRequested(
@@ -50,5 +62,22 @@ class TodosOverviewBloc extends Bloc<TodosOverviewEvent, TodosOverviewState> {
     Emitter<TodosOverviewState> emit,
   ) async {
     // TODO
+  }
+
+  Future<void> _onDeleteAllRequested(
+      TodosOverviewDeleteAllRequested event,
+      Emitter<TodosOverviewState> emit,
+      ) async {
+    var api = _todosRepository.todosApi;
+    await api.deleteAll();
+  }
+
+  Future<void> _onTodoDeleted(
+      TodosOverviewTodoDeleted event,
+      Emitter<TodosOverviewState> emit,
+      ) async {
+    emit(state.copyWith(lastDeletedTodo: () => event.todo));
+    var api = _todosRepository.todosApi;
+    await api.deleteTodo(event.todo.id);
   }
 }

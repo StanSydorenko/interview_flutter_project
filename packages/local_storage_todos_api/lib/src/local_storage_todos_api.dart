@@ -12,12 +12,12 @@ import 'package:todos_api/todos_api.dart';
 class LocalStorageTodosApi extends TodosApi {
   /// {@macro local_storage_todos_api}
   LocalStorageTodosApi({
-    required SharedPreferences plugin,
-  }) : _plugin = plugin {
+    required this.plugin,
+  }) {
     _init();
   }
 
-  final SharedPreferences _plugin;
+  final SharedPreferences plugin;
 
   final _todoStreamController = BehaviorSubject<List<Todo>>.seeded(const []);
 
@@ -28,9 +28,9 @@ class LocalStorageTodosApi extends TodosApi {
   @visibleForTesting
   static const kTodosCollectionKey = '__todos_collection_key__';
 
-  String? _getValue(String key) => _plugin.getString(key);
+  String? _getValue(String key) => plugin.getString(key);
   Future<void> _setValue(String key, String value) =>
-      _plugin.setString(key, value);
+      plugin.setString(key, value);
 
   void _init() {
     final todosJson = _getValue(kTodosCollectionKey);
@@ -84,5 +84,21 @@ class LocalStorageTodosApi extends TodosApi {
     _todoStreamController.add(newTodos);
     await _setValue(kTodosCollectionKey, json.encode(newTodos));
     return changedTodosAmount;
+  }
+
+  @override
+  Future<void> deleteTodo(String id) async {
+    final todos = [..._todoStreamController.value];
+    final todoIndex = todos.indexWhere((t) => t.id == id);
+    todos.removeAt(todoIndex);
+    print("HERE --->");
+    _todoStreamController.add(todos);
+    return _setValue(kTodosCollectionKey, json.encode(todos));
+  }
+
+  @override
+  Future<void> deleteAll() {
+    _todoStreamController.add([]);
+    return _setValue(kTodosCollectionKey, json.encode([]));
   }
 }

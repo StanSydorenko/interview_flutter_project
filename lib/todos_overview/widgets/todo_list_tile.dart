@@ -37,10 +37,13 @@ class TodoListTile extends StatelessWidget {
                       decoration: TextDecoration.lineThrough,
                     ),
             ),
-            subtitle: Text(
-              todo.description,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            subtitle: Container(
+              decoration: BoxDecoration(color: Colors.amber),
+              child: Text(
+                todo.description,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             leading: Checkbox(
               shape: const ContinuousRectangleBorder(

@@ -24,7 +24,8 @@ abstract class TodosApi {
   ///
   /// Returns the number of updated todos.
   Future<int> completeAll({required bool isCompleted});
-}
 
-/// Error thrown when a [Todo] with a given id is not found.
-class TodoNotFoundException implements Exception {}
+  Future<void> deleteTodo(String id);
+
+  Future<void> deleteAll();
+}

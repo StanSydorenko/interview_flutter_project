@@ -50,7 +50,7 @@ class EditTodoView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isNewTodo ? "Add Todo" : "Edit Todo",
+          isNewTodo ? "Add Task" : "Edit Task",
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -98,9 +98,9 @@ class _TitleField extends StatelessWidget {
         labelText: "Title",
         hintText: hintText,
       ),
-      maxLength: 50,
+      maxLength: 70,
       inputFormatters: [
-        LengthLimitingTextInputFormatter(50),
+        LengthLimitingTextInputFormatter(70),
         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
       ],
       onChanged: (value) {
